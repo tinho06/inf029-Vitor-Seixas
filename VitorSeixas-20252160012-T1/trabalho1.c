@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include "trabalho1.h" 
 #include <stdlib.h>
+#include <string.h>
 
 DataQuebrada quebraData(char data[]);
 
@@ -155,6 +156,38 @@ int data_para_inteiro(char data0[]){
     return resultado;
     
 }
+
+int achar_numeros(int numero1, int numerobusca0)
+{
+
+    int n2 = 0;
+    int n1 = 0;
+    int potencia = 1;
+    int casas_decimais = 0;
+    int n0 = 0;
+    int cont1 = 0;
+    int cont2 = 0;
+
+    for(n0 = numero1; n0 > 0; n0 /= 10){
+        casas_decimais++;
+    }
+
+    n2 = numero1;
+
+    while(cont1 < casas_decimais){
+        n1 = n2 % 10;
+       if(n1 == numerobusca0){
+        cont2++;
+       } 
+        n2 /= 10;
+        cont1++;
+    
+    }
+
+
+    return cont2;
+}
+
 
 /*
  Q1 = validar data
@@ -437,6 +470,35 @@ int q4(char *strTexto, char *strBusca, int posicoes[30])
 int q5(int num)
 {
 
+    int result = 0;
+    int n2 = 0;
+    int n1 = 0;
+    int potencia = 1;
+    int casas_decimais = 0;
+    int n0 = 0;
+    int cont = 0;
+
+    for(n0 = num; n0 > 0; n0 /= 10){
+        casas_decimais++;
+    }
+
+    for(int i = 1; i < casas_decimais; i++){
+        potencia *= 10;
+    }
+
+    n2 = num;
+
+    while(cont < casas_decimais){
+        n1 = n2 % 10;
+        n2 /= 10;
+        result += n1 * potencia;
+        potencia /= 10;
+        cont++;
+    
+    }
+
+    num = result;
+
     return num;
 }
 
@@ -452,8 +514,36 @@ int q5(int num)
 
 int q6(int numerobase, int numerobusca)
 {
-    int qtdOcorrencias;
+    char strBase[50];
+    char strBusca[50];
+    
+    sprintf(strBase, "%d", numerobase);
+    sprintf(strBusca, "%d", numerobusca);
+    
+    int qtdOcorrencias = 0;
+    int tamBusca = strlen(strBusca);
+    int tamBase = strlen(strBase);
+    
+    if (tamBusca > tamBase) {
+        return 0;
+    }
+    
+    for (int i = 0; i <= tamBase - tamBusca; i++) {
+        int achou = 1;
+        for (int j = 0; j < tamBusca; j++) {
+            if (strBase[i + j] != strBusca[j]) {
+                achou = 0;
+                break;
+            }
+        }
+        if (achou) {
+            qtdOcorrencias++;
+        }
+    }
+    
     return qtdOcorrencias;
+    
+    
 }
 
 /*
@@ -468,7 +558,42 @@ int q6(int numerobase, int numerobusca)
 
  int q7(char matriz[8][10], char palavra[5])
  {
-     int achou;
+     int achou = 0;
+     
+     int len = strlen(palavra);
+    
+    // Vetores de direção para as 8 direções possíveis (cima, baixo, esquerda, direita e diagonais)
+    int dr[] = {-1, -1, -1,  0,  0,  1,  1,  1};
+    int dc[] = {-1,  0,  1, -1,  1, -1,  0,  1};
+
+    // 1. Percorre cada célula da matriz para tentar achar o início da palavra
+    for (int r = 0; r < 8; r++) {
+        for (int c = 0; c < 10; c++) {
+            
+            // 2. Testa as 8 direções a partir da célula atual (r, c)
+            for (int d = 0; d < 8; d++) {
+                int k;
+                
+                // 3. Verifica letra por letra na direção escolhida
+                for (k = 0; k < len; k++) {
+                    int nr = r + k * dr[d];
+                    int nc = c + k * dc[d];
+
+                    // Se saiu dos limites da matriz ou a letra não bateu, interrompe essa direção
+                    if (nr < 0 || nr >= 8 || nc < 0 || nc >= 10 || matriz[nr][nc] != palavra[k]) {
+                        break;
+                    }
+                }
+                
+                // Se o loop completou todas as letras sem falhar, encontramos a palavra!
+                if (k == len) {
+                    achou = 1;
+                    return achou;
+                }
+            }
+        }
+    }
+     
      return achou;
  }
 
