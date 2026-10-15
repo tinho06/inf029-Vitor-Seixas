@@ -562,30 +562,26 @@ int q6(int numerobase, int numerobusca)
      
      int len = strlen(palavra);
     
-    // Vetores de direção para as 8 direções possíveis (cima, baixo, esquerda, direita e diagonais)
+    
     int dr[] = {-1, -1, -1,  0,  0,  1,  1,  1};
     int dc[] = {-1,  0,  1, -1,  1, -1,  0,  1};
 
-    // 1. Percorre cada célula da matriz para tentar achar o início da palavra
+   
     for (int r = 0; r < 8; r++) {
         for (int c = 0; c < 10; c++) {
             
-            // 2. Testa as 8 direções a partir da célula atual (r, c)
             for (int d = 0; d < 8; d++) {
                 int k;
                 
-                // 3. Verifica letra por letra na direção escolhida
                 for (k = 0; k < len; k++) {
                     int nr = r + k * dr[d];
                     int nc = c + k * dc[d];
 
-                    // Se saiu dos limites da matriz ou a letra não bateu, interrompe essa direção
                     if (nr < 0 || nr >= 8 || nc < 0 || nc >= 10 || matriz[nr][nc] != palavra[k]) {
                         break;
                     }
                 }
                 
-                // Se o loop completou todas as letras sem falhar, encontramos a palavra!
                 if (k == len) {
                     achou = 1;
                     return achou;
